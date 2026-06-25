@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 // Client Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+Route::get('/search/autocomplete', [\App\Http\Controllers\SearchController::class, 'autocomplete'])->name('search.autocomplete');
 Route::get('/product/{slug}', [ShopController::class, 'show'])->name('shop.show');
 
 // Auth Routes

@@ -20,6 +20,13 @@
             <ul style="display: flex; gap: 2rem; align-items: center;">
                 <li><a href="{{ route('home') }}">Accueil</a></li>
                 <li><a href="{{ route('shop.index') }}">Boutique</a></li>
+                <li style="position: relative;">
+                    <div style="display: flex; align-items: center; background: rgba(255,255,255,0.5); padding: 0.5rem 1rem; border-radius: 2rem; border: 1px solid var(--gray-200);">
+                        <i class="fa-solid fa-magnifying-glass" style="margin-right: 0.5rem; color: var(--gray-700);"></i>
+                        <input type="text" id="main-search" placeholder="Rechercher..." style="background: none; border: none; outline: none; width: 150px;">
+                    </div>
+                    <div id="search-results" class="glass" style="position: absolute; top: 100%; left: 0; width: 300px; margin-top: 0.5rem; display: none; z-index: 100; border-radius: 1rem; overflow: hidden;"></div>
+                </li>
                 @auth
                     <li><a href="{{ route('orders.index') }}">Mes Commandes</a></li>
                     @if(auth()->user()->role === 'admin')
@@ -79,6 +86,39 @@
                     window.location.reload();
                 });
             }
+        </script>
+
+        <script>
+            const searchInput = document.getElementById('main-search');
+            const searchResults = document.getElementById('search-results');
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value;
+                if (query.length < 2) {
+                    searchResults.style.display = 'none';
+                    return;
+                }
+
+                fetch(`{{ route('search.autocomplete') }}?q=${query}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            searchResults.innerHTML = data.map(p => `
+                                <a href="/product/${p.slug}" style="display: block; padding: 1rem; border-bottom: 1px solid var(--gray-100); color: var(--dark); text-decoration: none;">
+                                    <div style="font-weight: 700;">${p.name}</div>
+                                    <div style="font-size: 0.8rem; color: var(--primary);">${p.price} DH</div>
+                                </a>
+                            `).join('');
+                            searchResults.style.display = 'block';
+                        } else {
+                            searchResults.style.display = 'none';
+                        }
+                    });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target)) searchResults.style.display = 'none';
+            });
         </script>
 
         @yield('content')
