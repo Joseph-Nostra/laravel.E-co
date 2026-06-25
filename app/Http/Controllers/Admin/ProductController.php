@@ -18,6 +18,12 @@ class ProductController extends Controller
         return view('admin.products.index', compact('products', 'categories'));
     }
 
+    public function edit(Product $product)
+    {
+        $categories = Category::all();
+        return view('admin.products.edit', compact('product', 'categories'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -67,7 +73,7 @@ class ProductController extends Controller
             'category_id' => $request->category_id,
         ]);
 
-        return redirect()->back()->with('success', 'Product updated successfully');
+        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully');
     }
 
     public function destroy(Product $product)

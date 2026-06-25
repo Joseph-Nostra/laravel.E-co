@@ -17,15 +17,14 @@ services:
       - eco-network
 
   db:
-    image: mysql:8.0
+    image: mariadb:10.6
     container_name: eco-db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-laravel_eco}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-root}
-      MYSQL_USER: ${DB_USERNAME:-root}
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MARIADB_DATABASE: laravel_eco
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_PASSWORD: root
+      MARIADB_USER: root
     ports:
       - "3307:3306"
     volumes:

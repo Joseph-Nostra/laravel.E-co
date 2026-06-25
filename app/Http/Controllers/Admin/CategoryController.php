@@ -14,6 +14,11 @@ class CategoryController extends Controller
         return view('admin.categories.index', compact('categories'));
     }
 
+    public function edit(Category $category)
+    {
+        return view('admin.categories.edit', compact('category'));
+    }
+
     public function store(Request $request)
     {
         $request->validate(['name' => 'required']);
@@ -25,7 +30,7 @@ class CategoryController extends Controller
     {
         $request->validate(['name' => 'required']);
         $category->update($request->all());
-        return redirect()->back()->with('success', 'Category updated successfully');
+        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully');
     }
 
     public function destroy(Category $category)

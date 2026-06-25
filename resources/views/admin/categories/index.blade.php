@@ -20,9 +20,9 @@
                             <td style="padding: 1rem; font-weight: 700;">{{ $category->name }}</td>
                             <td style="padding: 1rem;">
                                 <div style="display: flex; gap: 1rem;">
-                                    <button class="edit-btn" style="color: var(--primary); background: none; border: none; cursor: pointer;">
+                                    <a href="{{ route('admin.categories.edit', $category) }}" style="color: var(--primary);">
                                         <i class="fa-solid fa-pen"></i>
-                                    </button>
+                                    </a>
                                     <form action="{{ route('admin.categories.destroy', $category) }}" method="POST">
                                         @csrf @method('DELETE')
                                         <button type="submit" style="color: #ef4444; background: none; border: none; cursor: pointer;">

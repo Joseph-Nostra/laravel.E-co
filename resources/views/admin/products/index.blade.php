@@ -79,7 +79,7 @@
                         </td>
                         <td style="padding: 1rem;">
                             <div style="display: flex; gap: 1rem;">
-                                <button style="color: var(--primary); background: none; border: none; cursor: pointer;"><i class="fa-solid fa-pen"></i></button>
+                                <a href="{{ route('admin.products.edit', $product) }}" style="color: var(--primary);"><i class="fa-solid fa-pen"></i></a>
                                 <form action="{{ route('admin.products.destroy', $product) }}" method="POST">
                                     @csrf @method('DELETE')
                                     <button type="submit" style="color: #ef4444; background: none; border: none; cursor: pointer;"><i class="fa-solid fa-trash"></i></button>
