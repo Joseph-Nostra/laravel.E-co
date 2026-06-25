@@ -18,20 +18,34 @@
             </a>
             
             <ul style="display: flex; gap: 2rem; align-items: center;">
-                <li><a href="{{ route('home') }}">Accueil</a></li>
-                <li><a href="{{ route('shop.index') }}">Boutique</a></li>
-                <li style="position: relative;">
-                    <div style="display: flex; align-items: center; background: rgba(255,255,255,0.5); padding: 0.5rem 1rem; border-radius: 2rem; border: 1px solid var(--gray-200);">
-                        <i class="fa-solid fa-magnifying-glass" style="margin-right: 0.5rem; color: var(--gray-700);"></i>
-                        <input type="text" id="main-search" placeholder="Rechercher..." style="background: none; border: none; outline: none; width: 150px;">
-                    </div>
-                    <div id="search-results" class="glass" style="position: absolute; top: 100%; left: 0; width: 300px; margin-top: 0.5rem; display: none; z-index: 100; border-radius: 1rem; overflow: hidden;"></div>
-                </li>
+                @if(!auth()->check() || auth()->user()->role === 'client')
+                    <li><a href="{{ route('home') }}">Accueil</a></li>
+                    <li><a href="{{ route('shop.index') }}">Boutique</a></li>
+                    <li style="position: relative;">
+                        <div style="display: flex; align-items: center; background: rgba(255,255,255,0.5); padding: 0.5rem 1rem; border-radius: 2rem; border: 1px solid var(--gray-200);">
+                            <i class="fa-solid fa-magnifying-glass" style="margin-right: 0.5rem; color: var(--gray-700);"></i>
+                            <input type="text" id="main-search" placeholder="Rechercher..." style="background: none; border: none; outline: none; width: 150px;">
+                        </div>
+                        <div id="search-results" class="glass" style="position: absolute; top: 100%; left: 0; width: 300px; margin-top: 0.5rem; display: none; z-index: 100; border-radius: 1rem; overflow: hidden;"></div>
+                    </li>
+                @endif
+
                 @auth
-                    <li><a href="{{ route('orders.index') }}">Mes Commandes</a></li>
-                    @if(auth()->user()->role === 'admin')
-                        <li><a href="{{ route('admin.dashboard') }}" class="btn btn-primary" style="padding: 0.5rem 1rem;">Dashboard</a></li>
+                    @if(auth()->user()->role === 'client')
+                        <li><a href="{{ route('orders.index') }}">Mes Commandes</a></li>
+                        <li><a href="{{ route('wishlist.index') }}" style="color: var(--dark); font-size: 1.2rem;"><i class="fa-regular fa-heart"></i></a></li>
+                        <li>
+                            <a href="{{ route('cart.index') }}" style="position: relative;">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                @if(session('cart') && count(session('cart')) > 0)
+                                    <span style="position: absolute; top: -10px; right: -10px; background: var(--secondary); color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.75rem;">{{ count(session('cart')) }}</span>
+                                @endif
+                            </a>
+                        </li>
+                    @else
+                        <li><a href="{{ route('admin.dashboard') }}" class="btn btn-primary" style="padding: 0.5rem 1rem;">Admin Dashboard</a></li>
                     @endif
+                    
                     <li>
                         <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                             @csrf
@@ -42,14 +56,6 @@
                     <li><a href="{{ route('login') }}">Connexion</a></li>
                     <li><a href="{{ route('register') }}" class="btn btn-primary" style="padding: 0.5rem 1rem;">S'inscrire</a></li>
                 @endauth
-                <li>
-                    <a href="{{ route('cart.index') }}" style="position: relative;">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                        @if(session('cart') && count(session('cart')) > 0)
-                            <span style="position: absolute; top: -10px; right: -10px; background: var(--secondary); color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.75rem;">{{ count(session('cart')) }}</span>
-                        @endif
-                    </a>
-                </li>
             </ul>
         </div>
     </nav>
