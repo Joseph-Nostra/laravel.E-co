@@ -60,6 +60,27 @@
             </div>
         @endif
 
+        <script>
+            function toggleWishlist(productId) {
+                fetch(`/wishlist/toggle/${productId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'added') {
+                        alert('Ajouté à la liste de souhaits !');
+                    } else {
+                        alert('Retiré de la liste de souhaits.');
+                    }
+                    window.location.reload();
+                });
+            }
+        </script>
+
         @yield('content')
     </main>
 

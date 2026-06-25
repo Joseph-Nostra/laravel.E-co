@@ -63,12 +63,15 @@
                                 <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">{{ $product->name }}</h3>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span style="font-weight: 800;">{{ number_format($product->price, 2) }} DH</span>
-                                    <form action="{{ route('cart.add', $product) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" style="color: var(--primary); background: none; border: none; cursor: pointer; font-size: 1.25rem;">
-                                            <i class="fa-solid fa-cart-plus"></i>
+                                    <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                                        <form action="{{ route('cart.add', $product) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary">Ajouter au Panier</button>
+                                        </form>
+                                        <button onclick="event.preventDefault(); toggleWishlist({{ $product->id }})" class="btn" style="background: white; color: var(--primary); border: 1px solid var(--primary);">
+                                            <i class="fa-regular fa-heart"></i>
                                         </button>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>

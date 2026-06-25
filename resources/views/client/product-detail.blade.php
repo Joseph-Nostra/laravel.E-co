@@ -44,12 +44,13 @@
                 <div style="display: flex; gap: 1rem; margin-bottom: 3rem;">
                     <form action="{{ route('cart.add', $product) }}" method="POST" style="flex: 1;">
                         @csrf
-                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;" {{ $product->stock <= 0 ? 'disabled' : '' }}>
-                            <i class="fa-solid fa-cart-plus"></i> Ajouter au Panier
-                        </button>
+                        <div style="display: flex; gap: 1rem;">
+                            <input type="number" name="quantity" value="1" min="1" style="width: 80px; padding: 0.8rem; border-radius: 0.75rem; border: 1px solid var(--gray-200);">
+                            <button type="submit" class="btn btn-primary" style="flex: 1; font-size: 1.1rem;" {{ $product->stock <= 0 ? 'disabled' : '' }}>Ajouter au Panier</button>
+                        </div>
                     </form>
-                    <button class="btn" style="background: white; border: 1px solid var(--gray-200); padding: 1rem;">
-                        <i class="fa-regular fa-heart"></i>
+                    <button onclick="toggleWishlist({{ $product->id }})" class="btn" style="background: var(--light); color: var(--primary); border: 1px solid var(--primary); padding: 0 1.5rem;">
+                        <i class="fa-regular fa-heart" style="font-size: 1.25rem;"></i>
                     </button>
                 </div>
 
