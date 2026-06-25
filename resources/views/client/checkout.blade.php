@@ -63,10 +63,25 @@
                     </div>
 
                     <div style="border-top: 1px solid var(--gray-200); padding-top: 1.5rem; display: grid; gap: 1rem;">
-                        <div style="display: flex; justify-content: space-between; color: var(--gray-700);">
+                        <div style="margin-bottom: 2rem; border-bottom: 1px solid var(--gray-200); padding-bottom: 1.5rem;">
+                            <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem;">Code Promo</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="coupon-code" style="flex: 1; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid var(--gray-200);">
+                                <button type="button" onclick="applyCoupon()" class="btn" style="padding: 0.5rem 1rem; border: 1px solid var(--primary); color: var(--primary);">Appliquer</button>
+                            </div>
+                            <p id="coupon-msg" style="font-size: 0.75rem; margin-top: 0.25rem;"></p>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; color: var(--gray-700);">
                             <span>Sous-total</span>
                             <span>{{ number_format($total, 2) }} DH</span>
                         </div>
+                        @if(session('coupon'))
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; color: #166534; font-weight: 600;">
+                                <span>Remise ({{ session('coupon')['code'] }})</span>
+                                <span>- {{ session('coupon')['type'] == 'fixed' ? number_format(session('coupon')['value'], 2) . ' DH' : session('coupon')['value'] . '%' }}</span>
+                            </div>
+                        @endif
                         <div style="display: flex; justify-content: space-between; color: #166534; font-weight: 600;">
                             <span>Livraison</span>
                             <span>Gratuite</span>
@@ -83,4 +98,30 @@
             </aside>
         </form>
     </div>
+<script>
+    function applyCoupon() {
+        const code = document.getElementById('coupon-code').value;
+        const msg = document.getElementById('coupon-msg');
+        
+        fetch("{{ route('checkout.coupon') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ code: code })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                msg.style.color = '#ef4444';
+                msg.innerText = data.error;
+            } else {
+                msg.style.color = '#166534';
+                msg.innerText = data.success;
+                setTimeout(() => window.location.reload(), 1000);
+            }
+        });
+    }
+</script>
 @endsection

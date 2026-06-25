@@ -21,45 +21,44 @@ class CheckoutController extends Controller
 
     public function process(Request $request)
     {
+        $cart = session()->get('cart', []);
+        if (empty($cart)) return redirect()->route('shop.index');
+
         $request->validate([
             'address' => 'required',
             'city' => 'required',
             'phone' => 'required',
         ]);
 
-        $cart = session()->get('cart', []);
-        
-        if (empty($cart)) {
-            return redirect()->route('shop.index');
+        $total = 0;
+        foreach ($cart as $item) $total += $item['price'] * $item['quantity'];
+
+        $discount = 0;
+        if (session()->has('coupon')) {
+            $cp = session('coupon');
+            if ($cp['type'] == 'fixed') $discount = $cp['value'];
+            else $discount = ($total * $cp['value']) / 100;
         }
 
-        DB::transaction(function () use ($request, $cart) {
-            $total = 0;
-            foreach ($cart as $item) {
-                $total += $item['price'] * $item['quantity'];
-            }
+        $order = Order::create([
+            'user_id' => Auth::id(),
+            'total_price' => max(0, $total - $discount),
+            'status' => 'pending',
+            'address' => $request->address,
+            'city' => $request->city,
+            'phone' => $request->phone
+        ]);
 
-            $order = Order::create([
-                'user_id' => Auth::id(),
-                'total_price' => $total,
-                'status' => 'pending',
-                'address' => $request->address,
-                'city' => $request->city,
-                'phone' => $request->phone,
+        foreach ($cart as $id => $details) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $id,
+                'quantity' => $details['quantity'],
+                'price' => $details['price']
             ]);
+        }
 
-            foreach ($cart as $id => $item) {
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $id,
-                    'quantity' => $item['quantity'],
-                    'price' => $item['price'],
-                ]);
-            }
-        });
-
-        session()->forget('cart');
-
-        return redirect()->route('orders.index')->with('success', 'Order placed successfully!');
+        session()->forget(['cart', 'coupon']);
+        return redirect()->route('orders.index')->with('success', 'Commande validée !');
     }
 }
