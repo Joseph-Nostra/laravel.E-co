@@ -18,31 +18,48 @@
             </a>
             
             <ul style="display: flex; gap: 2rem; align-items: center;">
-                <li><a href="{{ route('home') }}">Accueil</a></li>
-                <li><a href="{{ route('shop.index') }}">Boutique</a></li>
                 @auth
-                    <li><a href="{{ route('orders.index') }}">Mes Commandes</a></li>
-                    @if(auth()->user()->role === 'admin')
+                    @if(auth()->user()->isAdmin())
                         <li><a href="{{ route('admin.dashboard') }}" class="btn btn-primary" style="padding: 0.5rem 1rem;">Dashboard</a></li>
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                @csrf
+                                <button type="submit" style="background: none; border: none; cursor: pointer; color: var(--secondary); font-weight: 600;">Déconnexion</button>
+                            </form>
+                        </li>
+                    @else
+                        <li><a href="{{ route('home') }}">Accueil</a></li>
+                        <li><a href="{{ route('shop.index') }}">Boutique</a></li>
+                        <li><a href="{{ route('orders.index') }}">Mes Commandes</a></li>
+                        <li>
+                            <a href="{{ route('cart.index') }}" style="position: relative;">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                @if(session('cart') && count(session('cart')) > 0)
+                                    <span style="position: absolute; top: -10px; right: -10px; background: var(--secondary); color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.75rem;">{{ count(session('cart')) }}</span>
+                                @endif
+                            </a>
+                        </li>
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                @csrf
+                                <button type="submit" style="background: none; border: none; cursor: pointer; color: var(--secondary); font-weight: 600;">Déconnexion</button>
+                            </form>
+                        </li>
                     @endif
-                    <li>
-                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                            @csrf
-                            <button type="submit" style="background: none; border: none; cursor: pointer; color: var(--secondary); font-weight: 600;">Déconnexion</button>
-                        </form>
-                    </li>
                 @else
+                    <li><a href="{{ route('home') }}">Accueil</a></li>
+                    <li><a href="{{ route('shop.index') }}">Boutique</a></li>
                     <li><a href="{{ route('login') }}">Connexion</a></li>
                     <li><a href="{{ route('register') }}" class="btn btn-primary" style="padding: 0.5rem 1rem;">S'inscrire</a></li>
+                    <li>
+                        <a href="{{ route('cart.index') }}" style="position: relative;">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            @if(session('cart') && count(session('cart')) > 0)
+                                <span style="position: absolute; top: -10px; right: -10px; background: var(--secondary); color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.75rem;">{{ count(session('cart')) }}</span>
+                            @endif
+                        </a>
+                    </li>
                 @endauth
-                <li>
-                    <a href="{{ route('cart.index') }}" style="position: relative;">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                        @if(session('cart') && count(session('cart')) > 0)
-                            <span style="position: absolute; top: -10px; right: -10px; background: var(--secondary); color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.75rem;">{{ count(session('cart')) }}</span>
-                        @endif
-                    </a>
-                </li>
             </ul>
         </div>
     </nav>
