@@ -60,8 +60,9 @@
                     @csrf
                     <select name="status" style="width: 100%; padding: 0.875rem; border-radius: 0.75rem; border: 1px solid var(--gray-200); outline: none; margin-bottom: 1.5rem;">
                         <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>En attente</option>
-                        <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>En cours</option>
-                        <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Terminée</option>
+                        <option value="confirmed" {{ $order->status == 'confirmed' ? 'selected' : '' }}>Confirmée</option>
+                        <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Expédiée</option>
+                        <option value="delivered" {{ $order->status == 'delivered' ? 'selected' : '' }}>Livrée</option>
                         <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Annulée</option>
                     </select>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Mettre à Jour</button>
