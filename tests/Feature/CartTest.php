@@ -94,7 +94,7 @@ class CartTest extends TestCase
         $response->assertOk()->assertJson(['success' => true]);
 
         $this->assertSame(3, session('cart.' . $product->id . '.quantity'));
-        $this->assertSame(120.0, session('cart.' . $product->id . '.price'));
+        $this->assertEquals(120, session('cart.' . $product->id . '.price'));
         $this->assertSame('Updated product', session('cart.' . $product->id . '.name'));
     }
 
