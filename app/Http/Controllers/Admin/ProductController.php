@@ -15,35 +15,38 @@ class ProductController extends Controller
     {
         $products = Product::with('category')->latest()->paginate(10);
         $categories = Category::all();
+
         return view('admin.products.index', compact('products', 'categories'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
-            'stock' => 'required|integer',
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'category_id' => ['required', 'integer', 'exists:categories,id'],
+            'stock' => ['required', 'integer', 'min:0'],
+            'images' => ['nullable', 'array'],
+            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
         $product = Product::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'description' => $request->description,
-            'price' => $request->price,
-            'stock' => $request->stock,
-            'category_id' => $request->category_id,
+            'name' => $validated['name'],
+            'slug' => Str::slug($validated['name']),
+            'description' => $validated['description'] ?? null,
+            'price' => $validated['price'],
+            'stock' => $validated['stock'],
+            'category_id' => $validated['category_id'],
         ]);
 
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('products', 'public');
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image' => $path,
-                ]);
-            }
+        foreach ($request->file('images', []) as $image) {
+            $path = $image->store('products', 'public');
+
+            ProductImage::create([
+                'product_id' => $product->id,
+                'image' => $path,
+            ]);
         }
 
         return redirect()->back()->with('success', 'Product created successfully');
@@ -51,20 +54,21 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
-            'stock' => 'required|integer',
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'category_id' => ['required', 'integer', 'exists:categories,id'],
+            'stock' => ['required', 'integer', 'min:0'],
         ]);
 
         $product->update([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'description' => $request->description,
-            'price' => $request->price,
-            'stock' => $request->stock,
-            'category_id' => $request->category_id,
+            'name' => $validated['name'],
+            'slug' => Str::slug($validated['name']),
+            'description' => $validated['description'] ?? null,
+            'price' => $validated['price'],
+            'stock' => $validated['stock'],
+            'category_id' => $validated['category_id'],
         ]);
 
         return redirect()->back()->with('success', 'Product updated successfully');
@@ -73,6 +77,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
+
         return redirect()->back()->with('success', 'Product deleted successfully');
     }
 }

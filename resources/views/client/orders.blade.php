@@ -27,8 +27,8 @@
                             <div style="text-align: right;">
                                 <span style="display: inline-block; padding: 0.5rem 1rem; border-radius: 2rem; font-weight: 700; font-size: 0.875rem; 
                                     @if($order->status == 'pending') background: #fef9c3; color: #854d0e;
-                                    @elseif($order->status == 'processing') background: #dbeafe; color: #1e40af;
-                                    @elseif($order->status == 'completed') background: #dcfce7; color: #166534;
+                                    @elseif($order->status == 'confirmed' || $order->status == 'shipped') background: #dbeafe; color: #1e40af;
+                                    @elseif($order->status == 'delivered') background: #dcfce7; color: #166534;
                                     @else background: #fee2e2; color: #991b1b; @endif">
                                     {{ strtoupper($order->status) }}
                                 </span>
@@ -58,7 +58,7 @@
                                 <p><i class="fa-solid fa-phone"></i> {{ $order->phone }}</p>
                             </div>
                             <div style="text-align: right;">
-                                <p style="font-size: 0.875rem; color: var(--gray-700);">Total Payé</p>
+                                <p style="font-size: 0.875rem; color: var(--gray-700);">Total</p>
                                 <p style="font-size: 1.5rem; font-weight: 800;">{{ number_format($order->total_price, 2) }} DH</p>
                             </div>
                         </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class OrderController extends Controller
 {
@@ -22,8 +23,15 @@ class OrderController extends Controller
 
     public function updateStatus(Request $request, Order $order)
     {
-        $request->validate(['status' => 'required']);
-        $order->update(['status' => $request->status]);
+        $validated = $request->validate([
+            'status' => [
+                'required',
+                Rule::in(['pending', 'confirmed', 'shipped', 'delivered', 'cancelled']),
+            ],
+        ]);
+
+        $order->update(['status' => $validated['status']]);
+
         return redirect()->back()->with('success', 'Order status updated');
     }
 }
