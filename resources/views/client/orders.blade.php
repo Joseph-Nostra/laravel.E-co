@@ -58,7 +58,7 @@
                                 <p><i class="fa-solid fa-phone"></i> {{ $order->phone }}</p>
                             </div>
                             <div style="text-align: right;">
-                                <p style="font-size: 0.875rem; color: var(--gray-700);">Total Payé</p>
+                                <p style="font-size: 0.875rem; color: var(--gray-700);">Total</p>
                                 <p style="font-size: 1.5rem; font-weight: 800;">{{ number_format($order->total_price, 2) }} DH</p>
                             </div>
                         </div>
