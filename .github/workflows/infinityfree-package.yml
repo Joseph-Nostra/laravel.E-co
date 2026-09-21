@@ -1,0 +1,52 @@
+name: InfinityFree Deployment Package
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, dom, fileinfo, mysqli, pdo_mysql
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build frontend
+        run: |
+          npm install
+          npm run build
+
+      - name: Prepare deployment package
+        run: |
+          rm -rf .git .github node_modules tests
+          rm -f .env
+          rm -f package-lock.json
+          rm -rf storage/logs/*
+          rm -rf storage/framework/cache/*
+          rm -rf storage/framework/sessions/*
+          rm -rf storage/framework/views/*
+          zip -r laravel-infinityfree.zip . -x "storage/app/*"
+
+      - name: Upload deployment package
+        uses: actions/upload-artifact@v4
+        with:
+          name: laravel-infinityfree
+          path: laravel-infinityfree.zip
+          retention-days: 7
