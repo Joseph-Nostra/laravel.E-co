@@ -10,7 +10,7 @@ use App\Models\Review;
 use App\Models\Wishlist;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
