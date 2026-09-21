@@ -1,59 +1,104 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel E-Commerce
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel 12 e-commerce web application with a customer storefront and an admin area.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Customer
+- User registration, login and logout
+- Product catalogue with categories
+- Product search and category filtering
+- Product details with images, related products and reviews
+- Session-based shopping cart
+- Checkout and order creation
+- Customer order history
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Administration
+- Admin-only dashboard and management area
+- Category management
+- Product management with multiple images
+- Stock management
+- Order listing and order status management
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tech Stack
 
-## Learning Laravel
+- **PHP 8.2+**
+- **Laravel 12**
+- **Blade**
+- **MySQL / MariaDB**
+- **Eloquent ORM**
+- **Vite**
+- **Tailwind CSS**
+- **Axios**
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Architecture
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+The application follows Laravel's MVC structure:
 
-## Laravel Sponsors
+```text
+app/
+├── Http/
+│   ├── Controllers/
+│   │   └── Admin/
+│   └── Middleware/
+├── Models/
+database/
+├── migrations/
+routes/
+└── web.php
+resources/
+└── views/
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+The data model separates products, categories, product images, carts, orders, order items, reviews and wishlists through Eloquent relationships.
 
-### Premium Partners
+## Installation
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Requirements
 
-## Contributing
+- PHP 8.2+
+- Composer
+- Node.js and npm
+- MySQL or MariaDB
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Setup
 
-## Code of Conduct
+```bash
+git clone https://github.com/Joseph-Nostra/laravel.E-co.git
+cd laravel.E-co
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+composer install
+copy .env.example .env
+php artisan key:generate
+```
 
-## Security Vulnerabilities
+Configure your database in `.env`, then run:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+php artisan migrate
+npm install
+```
 
-## License
+### Development
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Run the Laravel and Vite development servers:
+
+```bash
+php artisan serve
+npm run dev
+```
+
+The application will be available at the local Laravel URL shown by `php artisan serve`.
+
+## Security Notes
+
+- Authentication uses Laravel's session-based authentication.
+- Administrative routes are protected by both authentication and an admin-role middleware.
+- Product uploads are validated by file type and size.
+- Checkout recalculates prices from the database, validates stock and updates inventory inside a database transaction.
+
+## Author
+
+**Youssef ZHAR — Joseph-Nostra**
+
+GitHub: https://github.com/Joseph-Nostra
